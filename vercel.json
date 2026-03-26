@@ -1,5 +1,8 @@
 {
-    "$schema": "https://openapi.vercel.sh/vercel.json",
-    "framework": "nuxtjs",
-    "buildCommand": "npm run build"
+    "crons": [
+        {
+            "path": "/api/edgar/sync",
+            "schedule": "0 6 * * *"
+        }
+    ]
 }
