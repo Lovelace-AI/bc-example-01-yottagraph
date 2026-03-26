@@ -1,49 +1,25 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
-
 interface GatewayConfig {
     gatewayUrl: string;
     orgId: string;
     apiKey: string;
 }
 
-let _config: GatewayConfig | null = null;
-
-function parseYamlValue(yaml: string, section: string, key: string): string {
-    const re = new RegExp(`^${section}:\\s*$`, 'm');
-    const idx = yaml.search(re);
-    if (idx === -1) return '';
-    const nl = yaml.indexOf('\n', idx);
-    if (nl === -1) return '';
-    const rest = yaml.slice(nl + 1);
-    const end = rest.search(/^\S/m);
-    const block = end === -1 ? rest : rest.slice(0, end);
-    const m = block.match(new RegExp(`${key}:\\s*["']?([^\\s"'#]+)`));
-    return m ? m[1] : '';
-}
-
-export function getGatewayConfig(): GatewayConfig {
-    if (_config) return _config;
-    try {
-        const yaml = readFileSync(resolve(process.cwd(), 'broadchurch.yaml'), 'utf-8');
-        _config = {
-            gatewayUrl: parseYamlValue(yaml, 'gateway', 'url'),
-            orgId: parseYamlValue(yaml, 'tenant', 'org_id'),
-            apiKey: parseYamlValue(yaml, 'gateway', 'qs_api_key'),
-        };
-    } catch {
-        _config = { gatewayUrl: '', orgId: '', apiKey: '' };
-    }
-    return _config;
+function getConfig(): GatewayConfig {
+    const pub = useRuntimeConfig().public as any;
+    return {
+        gatewayUrl: pub.gatewayUrl || '',
+        orgId: pub.tenantOrgId || '',
+        apiKey: pub.qsApiKey || '',
+    };
 }
 
 function qsUrl(endpoint: string): string {
-    const { gatewayUrl, orgId } = getGatewayConfig();
+    const { gatewayUrl, orgId } = getConfig();
     return `${gatewayUrl}/api/qs/${orgId}${endpoint}`;
 }
 
 function apiHeaders(contentType?: string): Record<string, string> {
-    const h: Record<string, string> = { 'X-Api-Key': getGatewayConfig().apiKey };
+    const h: Record<string, string> = { 'X-Api-Key': getConfig().apiKey };
     if (contentType) h['Content-Type'] = contentType;
     return h;
 }

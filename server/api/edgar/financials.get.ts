@@ -7,10 +7,17 @@ export default defineEventHandler(async (event) => {
     const { ticker } = getQuery(event) as { ticker?: string };
     if (!ticker) throw createError({ statusCode: 400, statusMessage: 'ticker is required' });
 
-    const rows = await sql`
-    SELECT * FROM financials
-    WHERE company_ticker = ${ticker}
-    ORDER BY filing_date ASC
-  `;
-    return { configured: true, financials: rows };
+    try {
+        const rows = await sql`
+      SELECT * FROM financials
+      WHERE company_ticker = ${ticker}
+      ORDER BY filing_date ASC
+    `;
+        return { configured: true, financials: rows };
+    } catch (e: any) {
+        if (e.message?.includes('does not exist')) {
+            return { configured: true, financials: [] };
+        }
+        throw e;
+    }
 });

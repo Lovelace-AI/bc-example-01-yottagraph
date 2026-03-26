@@ -22,6 +22,7 @@ function readBroadchurchYaml() {
         tenantOrgId: '',
         queryServerAddress: '',
         auth0ClientId: '',
+        qsApiKey: '',
     };
     try {
         if (!existsSync('broadchurch.yaml')) return empty;
@@ -56,6 +57,7 @@ function readBroadchurchYaml() {
             tenantOrgId: valueFrom('tenant', 'org_id'),
             queryServerAddress: urlFrom('query_server'),
             auth0ClientId: valueFrom('auth', 'client_id'),
+            qsApiKey: valueFrom('gateway', 'qs_api_key'),
         };
     } catch {
         return empty;
@@ -144,7 +146,7 @@ export default defineNuxtConfig({
     // See: https://nuxt.com/docs/guide/going-further/runtime-config
     runtimeConfig: {
         public: {
-            qsApiKey: '',
+            qsApiKey: bcYaml.qsApiKey,
             // App Identity — broadchurch.yaml provides defaults for provisioned projects
             appId: bcYaml.appId,
             appName: bcYaml.appName,
