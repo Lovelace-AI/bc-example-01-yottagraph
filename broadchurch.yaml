@@ -1,0 +1,27 @@
+# Broadchurch project configuration
+# Auto-generated during tenant provisioning.
+
+gcp:
+  project: broadchurch
+  region: us-central1
+  staging_bucket: broadchurch-agent-staging
+
+tenant:
+  project_name: "bc-example-01"
+  display_name: "bc-example-01"
+  org_id: "org_4Nzo5ZhSpFml348M"
+  service_account: "tenant-4nzo5zhspfml348m@broadchurch.iam.gserviceaccount.com"
+
+gateway:
+  url: "https://broadchurch-portal-194773164895.us-central1.run.app"
+  qs_api_key: "b4a021e28c28cd894c285f6463102b73b2a6c29f7deeaabf133b9a8997345c69"
+
+query_server:
+  url: "https://query.news.prod.g.lovelace.ai"
+  audience: "queryserver:api"
+
+auth:
+  client_id: "3dfgEJRoEyEI5I7dpF7H2No2PdL5XO9x"
+  audience: "queryserver:api"
+
+agents: {}
