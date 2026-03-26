@@ -760,7 +760,12 @@ ${auth0Audience ? `NUXT_PUBLIC_AUTH0_AUDIENCE=${auth0Audience}` : '# NUXT_PUBLIC
                 const envResp = await fetch(`${gwUrlForEnv}/api/projects/${orgIdForEnv}/env`);
                 if (envResp.ok) {
                     const { env: portalEnv } = await envResp.json();
-                    const storageKeys = ['KV_REST_API_URL', 'KV_REST_API_TOKEN', 'DATABASE_URL', 'DATABASE_URL_UNPOOLED'];
+                    const storageKeys = [
+                        'KV_REST_API_URL',
+                        'KV_REST_API_TOKEN',
+                        'DATABASE_URL',
+                        'DATABASE_URL_UNPOOLED',
+                    ];
                     const storageLines = [];
                     for (const line of portalEnv.split('\n')) {
                         const key = line.split('=')[0];
@@ -768,11 +773,13 @@ ${auth0Audience ? `NUXT_PUBLIC_AUTH0_AUDIENCE=${auth0Audience}` : '# NUXT_PUBLIC
                     }
                     if (storageLines.length > 0) {
                         envContent += `\n# Storage (auto-populated from portal)\n${storageLines.join('\n')}\n`;
-                        console.log(`✅ Fetched ${storageLines.length} storage credential(s) from portal`);
+                        console.log(
+                            `✅ Fetched ${storageLines.length} storage credential(s) from portal`
+                        );
                     }
 
                     // Scaffold Neon Postgres if DATABASE_URL was fetched
-                    if (storageLines.some(l => l.startsWith('DATABASE_URL='))) {
+                    if (storageLines.some((l) => l.startsWith('DATABASE_URL='))) {
                         scaffoldNeonPostgres();
                     }
                 }
@@ -858,7 +865,9 @@ function scaffoldNeonPostgres() {
     const utilsDir = path.join(process.cwd(), 'server', 'utils');
     fs.mkdirSync(utilsDir, { recursive: true });
 
-    fs.writeFileSync(neonUtilPath, `import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
+    fs.writeFileSync(
+        neonUtilPath,
+        `import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 
 let _sql: NeonQueryFunction | null = null;
 
@@ -885,7 +894,8 @@ export function getDb(): NeonQueryFunction | null {
     _sql = neon(url);
     return _sql;
 }
-`);
+`
+    );
     console.log('✅ Created server/utils/neon.ts');
 }
 
@@ -1151,7 +1161,12 @@ async function runLocalInit() {
                 const envResp = await fetch(`${gatewayUrl}/api/projects/${tenantOrgId}/env`);
                 if (envResp.ok) {
                     const { env: portalEnv } = await envResp.json();
-                    const storageKeys = ['KV_REST_API_URL', 'KV_REST_API_TOKEN', 'DATABASE_URL', 'DATABASE_URL_UNPOOLED'];
+                    const storageKeys = [
+                        'KV_REST_API_URL',
+                        'KV_REST_API_TOKEN',
+                        'DATABASE_URL',
+                        'DATABASE_URL_UNPOOLED',
+                    ];
                     const storageLines = [];
                     for (const line of portalEnv.split('\n')) {
                         const key = line.split('=')[0];
@@ -1160,9 +1175,11 @@ async function runLocalInit() {
                     if (storageLines.length > 0) {
                         lines.push(`# Storage (auto-populated from portal)`);
                         lines.push(...storageLines, '');
-                        console.log(`✅ Fetched ${storageLines.length} storage credential(s) from portal`);
+                        console.log(
+                            `✅ Fetched ${storageLines.length} storage credential(s) from portal`
+                        );
                     }
-                    if (storageLines.some(l => l.startsWith('DATABASE_URL='))) {
+                    if (storageLines.some((l) => l.startsWith('DATABASE_URL='))) {
                         scaffoldNeonPostgres();
                     }
                 }
@@ -1172,14 +1189,14 @@ async function runLocalInit() {
         }
 
         // Always add storage placeholders so agents can discover the vars
-        if (!lines.some(l => l.startsWith('DATABASE_URL='))) {
+        if (!lines.some((l) => l.startsWith('DATABASE_URL='))) {
             lines.push(
                 `# Storage — fill from Vercel project settings if not auto-populated`,
                 `# KV_REST_API_URL=`,
                 `# KV_REST_API_TOKEN=`,
                 `# DATABASE_URL=`,
                 `# DATABASE_URL_UNPOOLED=`,
-                '',
+                ''
             );
         }
 

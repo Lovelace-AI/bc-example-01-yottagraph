@@ -130,10 +130,10 @@ unless you know what you're doing.
 
 Two storage services are available. Check `.env` to see which are connected:
 
-| Store | How to check | Env var | Utility file | Always available? |
-|---|---|---|---|---|
-| **KV** (Upstash Redis) | `KV_REST_API_URL` in `.env` | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | `server/utils/redis.ts` (pre-scaffolded) | Yes |
-| **Neon Postgres** | `DATABASE_URL` in `.env` | `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | `server/utils/neon.ts` (scaffolded if Neon was provisioned) | Only if enabled at project creation |
+| Store                  | How to check                | Env var                                 | Utility file                                                | Always available?                   |
+| ---------------------- | --------------------------- | --------------------------------------- | ----------------------------------------------------------- | ----------------------------------- |
+| **KV** (Upstash Redis) | `KV_REST_API_URL` in `.env` | `KV_REST_API_URL`, `KV_REST_API_TOKEN`  | `server/utils/redis.ts` (pre-scaffolded)                    | Yes                                 |
+| **Neon Postgres**      | `DATABASE_URL` in `.env`    | `DATABASE_URL`, `DATABASE_URL_UNPOOLED` | `server/utils/neon.ts` (scaffolded if Neon was provisioned) | Only if enabled at project creation |
 
 ### Quick start
 
@@ -148,9 +148,9 @@ exists, Postgres is ready. Use `getDb()` in server routes:
 import { getDb } from '~/server/utils/neon';
 
 export default defineEventHandler(async () => {
-  const sql = getDb();
-  if (!sql) throw createError({ statusCode: 503, statusMessage: 'Database not configured' });
-  return await sql`SELECT * FROM my_table`;
+    const sql = getDb();
+    if (!sql) throw createError({ statusCode: 503, statusMessage: 'Database not configured' });
+    return await sql`SELECT * FROM my_table`;
 });
 ```
 
